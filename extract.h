@@ -3,6 +3,6 @@
 
 #include "file.h"
 
-void load_file(File *f, const char *fname);
+int load_file(file_t *f, const char *fname);
 
 #endif

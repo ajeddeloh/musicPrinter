@@ -4,18 +4,18 @@ SOURCES=$(wildcard *.c)
 HEADERS=$(wildcard *.h)
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=muprint
-CFLAGS= -c -std=c99 -Wall -Wextra -Werror
+CFLAGS= -std=c11 -Wall -Wextra -Werror -g
+LDFLAGS=-lavformat -lavutil
 
 %.o:%.c $(HEADERS)
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LD_FLAGS) $(OBJECTS) -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJECTS) -o $@
 
 .PHONY: all
-all:
-	$(EXECUTABLE)
+all: $(EXECUTABLE)
 
 .PHONY: clean
 clean: 
-	rm -f $(EXECUTABLE) $(OBJECTS)
+	rm -f $(OBJECTS) $(EXECUTABLE)

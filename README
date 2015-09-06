@@ -1,0 +1,41 @@
+This is a program to print formatted music metadata. It uses libavformat to
+extract the metadata, and thus will work on a large variety of files. 
+
+Still in development, most features and flags not implemented yet.
+
+Usage:
+$ muprint [OPTIONS] format_string filename
+
+format_string accepts the following metadata, support for more is planned. each
+are optionally prefixed with c or p for adding whitelisted characters. If you
+want more fine grained control on character substitution look into tr. c means
+"clean" as whitelists most non control characters, p means "posix" and
+whitelists all characters in the POSIX.1-2008 portable filesystem character set
+MODIFIERS
+a - allow all printing ascii characters
+p - allow all characters in the POSIX.1-2008 portable filesystem character set
+    (that is: all alphanumeric characters plus period (.), underscore(_) and
+    hyphen (-). Does NOT enforce that the first character should not be hyphen
+c - allows a custom set of characters, specified by the -c flag
+
+t - The track title
+T - The track number, does not currently support padding
+d - The disc number, does not currently support padding
+b - The album
+A - The album artist
+a - The artist
+e - The file's original extension
+
+example:
+/media/Music/%pA/%pb/%d-%T-%t.%e would be 
+/media/<album artist>/<album>/<artist>/<disc>-<track>-<title>.<extension>
+
+OPTIONS
+-c <characters> specifies what the custom character whitelist should be. Just
+    a string of characters e.g. "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+-s <original type><subsitition string> specifies what to replace a metadata
+    element with if not found. Defaults to "unknown". Other metadata elements
+    are valid. For example, you can replace all album artists with the artist
+    using -s "A%a"
+-r <single char> replace non-whitelisted characters with this one instead of
+    deleting them

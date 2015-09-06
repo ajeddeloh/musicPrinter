@@ -39,3 +39,13 @@ OPTIONS
     using -s "A%a"
 -r <single char> replace non-whitelisted characters with this one instead of
     deleting them
+
+BUILDING:
+You need libavformat and libavutil. Other than that its straight up C11 with
+POSIX.1-200809L extensions, so just running
+$ make
+should work. If you're debuging there's also 
+$ make debug
+which turns on -g for you
+
+

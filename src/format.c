@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "file.h"
 
@@ -74,5 +75,57 @@ bool get_needed_metadata(const char *format, char *metadata)
         return false;
     }
 }    
-
-
+/*
+void print_string(const char *format, const file_t *f) {
+    state_t state = STATE_TEXT;
+    char active_modifier = '\0';
+    char needed_metadata_buffer[N_METADATA_TYPES];
+    while (*format != '\0') {
+        char current = *format;
+        switch (state) {
+            case STATE_TEXT:
+                if (current == '%') {
+                    state = STATE_PERCENT;
+                } else {
+                    putchar(current);
+                }
+                break;
+            case STATE_PERCENT:
+                if (strchr(valid_modifiers, current) != NULL) {
+                    active_modifier = current;
+                    state = STATE_MODIFIER;
+                } else if (strchr(valid_types, current) != NULL) {
+                    type = 
+                    state = STATE_TYPE;
+                } else {
+                    return false;
+                }
+                break;
+            case STATE_MODIFIER:
+                if (strchr(valid_types, current) != NULL) {
+                    if (strchr(metadata, current) == NULL) { //if metadata doesnt have it
+                        *metadata_cursor = current;
+                        metadata_cursor++;
+                    }
+                    state = STATE_TYPE;
+                } else {
+                    return false;
+                }
+                break;
+            case STATE_TYPE:
+                if (current == '%') {
+                    state = STATE_PERCENT;
+                } else {
+                    state = STATE_TEXT;
+                }
+                break;
+        }
+        format++;
+    }
+    if (state == STATE_TYPE || state == STATE_TEXT) {
+        *metadata_cursor = '\0';
+        return true;
+    } else {
+        return false;
+    }
+*/

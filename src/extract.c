@@ -26,11 +26,13 @@ int load_file(file_t *f, const char *fname)
         return -1;
     }
     AVDictionaryEntry *entry = NULL;
-    for (size_t i = 0; i < f->n_entries; i ++) {
-        const char *key = metadata_type_string_map[f->entries[i].type];
+    for (size_t i = 0; i < N_METADATA_TYPES; i ++) {
+        const char *key = metadata_type_string_map[i];
         entry = av_dict_get(metadata, key, NULL, 0);
         if (entry != NULL) {
-            f->entries[i].value = strdup(entry->value);
+            f->entries[i] = strdup(entry->value);
+        } else {
+            f->entries[i] = NULL;
         }
     }
     avformat_close_input(&handle);

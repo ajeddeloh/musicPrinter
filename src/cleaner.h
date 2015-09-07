@@ -5,6 +5,7 @@
 /*
  * Works like strcpy but for 
  */
+
 void clean_string(const char *src, char *dest, const char* charset, char (*replace)(char c));
 
 #endif

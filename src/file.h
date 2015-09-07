@@ -1,6 +1,8 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include <stdbool.h>
+
 #define TITLE_CHAR 't'
 #define TRACK_NO_CHAR 'n'
 #define DISK_NO_CHAR 'd'
@@ -21,29 +23,17 @@ typedef enum {
 //parallel arrays, indices match up with the metadata_t enum
 extern const char metadata_type_char_map[];
 extern const char *metadata_type_string_map[];
+extern char* metadata_type_subst_map[];
 
-typedef struct metadata_entry {
-    metadata_t type;
-    char *value;
-    char *value_clean;
-} metadata_entry_t;
-
-typedef struct file {
-    metadata_entry_t *entries;
-    size_t n_entries;
+typedef struct {
+    char *entries[N_METADATA_TYPES];
 } file_t;
-
-void init_map();
-
-const char *metadata_get_name(metadata_t type);
 
 char *get_attr(const file_t *f, const metadata_t attr);
 
 void file_free(file_t *f);
 
-void metadata_entry_free(metadata_entry_t *m);
-
-void file_init(file_t *t, const char *needed_metadata);
-
 void file_print(const file_t *f);
+
+bool has_all_metadata(const file_t *f, const char *needed_metadata);
 #endif

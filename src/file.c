@@ -17,46 +17,44 @@ const char *metadata_type_string_map[] =
     "artist"
 };
 
-//public funcs
-char *file_get_attr(const file_t *f, const metadata_t attr) 
+char *metadata_type_subst_map[] = 
 {
-    for (size_t i = 0; i < f->n_entries; i++) {
-        if (f->entries[i].type == attr) {
-            return f->entries[i].value;
-        }
-    }
-    return NULL;
-}
+    "Unknown Title",
+    "0",
+    "0",
+    "Unknown Album",
+    "Unknown Artist",
+    "Unknown Artist",
+};
 
-void file_init(file_t *f, const char *needed_metadata) 
-{
-    f->n_entries = strlen(needed_metadata);
-    f->entries = calloc(sizeof(metadata_entry_t), f->n_entries);
-    assert(f->entries != NULL);
-    for (size_t i = 0; i < f->n_entries; i++) {
-        metadata_t type = strchr(metadata_type_char_map, needed_metadata[i]) - metadata_type_char_map;
-        f->entries[i] = (metadata_entry_t) {.type = type, .value = NULL, .value_clean=NULL};
-    }
+//private helpers
+static inline metadata_t char_to_metadata_t(const char in) {
+    return strchr(metadata_type_char_map, in)-metadata_type_char_map;
 }
 
 void file_print(const file_t *f) {
-    for(size_t i = 0; i < f->n_entries; i++) {
-        if (f->entries[i].value == NULL) continue;
-        const char *key = metadata_type_string_map[f->entries[i].type];
-        printf("%s : %s\n", key, f->entries[i].value);
+    for(size_t i = 0; i < N_METADATA_TYPES; i++) {
+        if (f->entries[i] == NULL) continue;
+
+        const char *key = metadata_type_string_map[i];
+        printf("%s : %s\n", key, f->entries[i]);
     }
 }
 
 void file_free(file_t *f) 
 {
-    for (size_t i = 0; i < f->n_entries; i++) {
-        metadata_entry_free(&(f->entries[i]));
+    for (int i = 0; i < N_METADATA_TYPES; i++) {
+        free(f->entries[i]);
     }
-    free(f->entries);
 }
 
-void metadata_entry_free(metadata_entry_t *m) 
+bool has_needed_metadata(const file_t *f, const char *needed_metadata)
 {
-    free(m->value);
-    free(m->value_clean);
+    while (*needed_metadata != '\0') {
+        metadata_t needed = char_to_metadata_t(*needed_metadata);
+        if (f->entries[needed] == NULL) {
+            return false;
+        }
+    }
+    return true;
 }

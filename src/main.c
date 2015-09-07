@@ -5,11 +5,6 @@
 #include "file.h"
 #include "extract.h"
 #include "format.h"
-/*
- * Format spec: 
- * TODO: write this
- */
-
 
 int main(int argc, char *argv[]) 
 {
@@ -23,9 +18,10 @@ int main(int argc, char *argv[])
     printf("Loaded format string: %s\n", format_string);
     char needed_metadata[N_METADATA_TYPES] = {0};
     bool valid = get_needed_metadata(format_string, needed_metadata);
-    file_init(&f, needed_metadata);
     load_file(&f, filename);
+
     file_print(&f);
+    
     if (valid) {
         printf("Metadata: %s\n", needed_metadata);
         printf("valid string\n");

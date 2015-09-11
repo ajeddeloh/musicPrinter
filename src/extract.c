@@ -1,6 +1,5 @@
 #define _POSIX_C_SOURCE 200809L
 
-#include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -15,7 +14,6 @@ int load_file(file_t *f, const char *fname)
     AVFormatContext *handle = NULL;
     
     if (avformat_open_input(&handle, fname, NULL, NULL) != 0) {
-        fprintf(stderr, "Error opening file: %s\n", fname);
         avformat_close_input(&handle);
         return -1;
     }

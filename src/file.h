@@ -29,6 +29,8 @@ typedef struct {
     char *entries[N_METADATA_TYPES];
 } file_t;
 
+metadata_t char_to_metadata_t(char in);
+
 char *get_attr(const file_t *f, const metadata_t attr);
 
 void file_free(file_t *f);

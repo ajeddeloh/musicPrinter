@@ -27,9 +27,9 @@ char *metadata_type_subst_map[] =
     "Unknown Artist",
 };
 
-//private helpers
-static inline metadata_t char_to_metadata_t(const char in) {
-    return strchr(metadata_type_char_map, in)-metadata_type_char_map;
+metadata_t char_to_metadata_t(char in)
+{
+    return strchr(metadata_type_char_map, in) - metadata_type_char_map;
 }
 
 void file_print(const file_t *f) {

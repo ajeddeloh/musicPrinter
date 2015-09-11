@@ -1,7 +1,8 @@
 #ifndef FORMAT_H
 #define FORMAT_H
 
-#include <stdbool.h>
+#define VALID_FORMAT 0
+#define INVALID_FORMAT -1
 
 /*
  * lex's a format string and determines what metadata elements it needs, filling
@@ -10,6 +11,7 @@
  * N_METADATA_TYPES + 1 bytes)
  * returns if the format string was valid
  */
-bool get_needed_metadata(const char *format, char *buffer);
+int get_needed_metadata(const char *format, char *buffer);
 
+void print_string(const char *format, const file_t *f);
 #endif

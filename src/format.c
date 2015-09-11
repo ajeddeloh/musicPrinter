@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "file.h"
+#include "format.h"
 
 typedef enum {
     STATE_TEXT, //doubles as start state. change this?
@@ -17,12 +18,25 @@ typedef enum {
 const char valid_modifiers[] = "c"; //for now
 const char *valid_types = metadata_type_char_map;
 
+//modifier is actaully a true pointer to single char
+static void print_type(const file_t *f, const char type, char *modifier)
+{
+    metadata_t tmp = char_to_metadata_t(type);
+    if (f->entries[tmp] != NULL) {
+        fputs(f->entries[tmp], stdout);
+        *modifier = '\0';
+    } else {
+        fprintf(stderr, "Fatal error: file had no element %s\n", metadata_type_string_map[tmp]);
+        exit(EXIT_FAILURE);
+    }
+}
+
 /*
  * validates the string using a state machine for the regex:
  * (t*%(T+mT))* where t is text, % is itself, m is modifier
  * and T is a metadata type.
  */
-bool get_needed_metadata(const char *format, char *metadata) 
+int get_needed_metadata(const char *format, char *metadata) 
 {
     state_t state = STATE_TEXT;
     char *metadata_cursor = metadata;
@@ -44,7 +58,7 @@ bool get_needed_metadata(const char *format, char *metadata)
                     }
                     state = STATE_TYPE;
                 } else {
-                    return false;
+                    return INVALID_FORMAT;
                 }
                 break;
             case STATE_MODIFIER:
@@ -55,7 +69,7 @@ bool get_needed_metadata(const char *format, char *metadata)
                     }
                     state = STATE_TYPE;
                 } else {
-                    return false;
+                    return INVALID_FORMAT;
                 }
                 break;
             case STATE_TYPE:
@@ -70,16 +84,16 @@ bool get_needed_metadata(const char *format, char *metadata)
     }
     if (state == STATE_TYPE || state == STATE_TEXT) {
         *metadata_cursor = '\0';
-        return true;
+        return VALID_FORMAT;
     } else {
-        return false;
+        return INVALID_FORMAT;
     }
 }    
-/*
+
+//assumes string has already been checked for validity
 void print_string(const char *format, const file_t *f) {
     state_t state = STATE_TEXT;
     char active_modifier = '\0';
-    char needed_metadata_buffer[N_METADATA_TYPES];
     while (*format != '\0') {
         char current = *format;
         switch (state) {
@@ -94,38 +108,24 @@ void print_string(const char *format, const file_t *f) {
                 if (strchr(valid_modifiers, current) != NULL) {
                     active_modifier = current;
                     state = STATE_MODIFIER;
-                } else if (strchr(valid_types, current) != NULL) {
-                    type = 
+                } else { //is type
+                    print_type(f, current, &active_modifier);
                     state = STATE_TYPE;
-                } else {
-                    return false;
                 }
                 break;
             case STATE_MODIFIER:
-                if (strchr(valid_types, current) != NULL) {
-                    if (strchr(metadata, current) == NULL) { //if metadata doesnt have it
-                        *metadata_cursor = current;
-                        metadata_cursor++;
-                    }
-                    state = STATE_TYPE;
-                } else {
-                    return false;
-                }
+                print_type(f, current, &active_modifier);
+                state = STATE_TYPE;
                 break;
             case STATE_TYPE:
                 if (current == '%') {
                     state = STATE_PERCENT;
                 } else {
+                    putchar(current);
                     state = STATE_TEXT;
                 }
                 break;
         }
         format++;
     }
-    if (state == STATE_TYPE || state == STATE_TEXT) {
-        *metadata_cursor = '\0';
-        return true;
-    } else {
-        return false;
-    }
-*/
+}

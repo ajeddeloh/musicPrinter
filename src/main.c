@@ -5,6 +5,7 @@
 #include "file.h"
 #include "extract.h"
 #include "format.h"
+#include "subst.h"
 
 int main(int argc, char *argv[]) 
 {
@@ -14,9 +15,8 @@ int main(int argc, char *argv[])
     }
     const char *format_string = argv[1];
     const char *filename = argv[2];
-    puts(filename);
+    
     file_t f;
-    //printf("Loaded format string: %s\n", format_string);
     char needed_metadata[N_METADATA_TYPES] = {0};
     int err = get_needed_metadata(format_string, needed_metadata);
     if (err != VALID_FORMAT) {
@@ -29,14 +29,14 @@ int main(int argc, char *argv[])
         fflush(stderr);
         exit(EXIT_FAILURE);
     }
-    //file_print(&f);
+
+    register_subst(TITLE, "Unknown Title");
+    register_subst(TRACK_NO, "00");
+    register_subst(DISC_NO, "00");
+    register_subst(ALBUM, "Unknown Album");
+    register_subst(ALBUM_ARTIST, "Unknown Artist");
+    register_subst(ARTIST, "Unknown Artist");
     
-    /*if (valid) {
-        printf("Metadata: %s\n", needed_metadata);
-        printf("valid string\n");
-    } else {
-        printf("invalid string\n");
-    }*/
     print_string(format_string, &f);
     putchar('\n');
     file_free(&f);

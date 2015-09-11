@@ -5,9 +5,12 @@
 #include <stdlib.h>
 
 #include "subst.h"
+#include "file.h"
+#include "format.h"
 
 subst_t *subs[N_METADATA_TYPES] = {0};
 
+//for debug
 static void print_all_subs(const metadata_t type)
 {
     subst_t *current = subs[type];
@@ -26,3 +29,19 @@ void register_subst(const metadata_t type, const char *sub)
     print_all_subs(type);
 }
 
+char *get_first_sub(const metadata_t type, const file_t *f)
+{
+    subst_t *current = subs[type];
+    char metadata[N_METADATA_TYPES];
+    while (current != NULL) {
+        int err = get_needed_metadata(current->string, metadata);
+        if (err == INVALID_FORMAT) {
+            return NULL;
+        }
+        if (has_all_metadata(f, metadata)) {
+            return current->string;
+        }
+        current = current -> next;
+    }
+    return NULL;
+}

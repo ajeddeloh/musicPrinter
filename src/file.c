@@ -48,7 +48,7 @@ void file_free(file_t *f)
     }
 }
 
-bool has_needed_metadata(const file_t *f, const char *needed_metadata)
+bool has_all_metadata(const file_t *f, const char *needed_metadata)
 {
     while (*needed_metadata != '\0') {
         metadata_t needed = char_to_metadata_t(*needed_metadata);

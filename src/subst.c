@@ -11,7 +11,7 @@
 subst_t *subs[N_METADATA_TYPES] = {0};
 
 //for debug
-static void print_all_subs(const metadata_t type)
+void print_all_subs(const metadata_t type)
 {
     subst_t *current = subs[type];
     while (current != NULL) {
@@ -26,10 +26,9 @@ void register_subst(const metadata_t type, const char *sub)
     new_subst->string = strdup(sub);
     new_subst->next = subs[type];
     subs[type] = new_subst;
-    print_all_subs(type);
 }
 
-char *get_first_sub(const metadata_t type, const file_t *f)
+char *get_sub(const metadata_t type, const file_t *f)
 {
     subst_t *current = subs[type];
     char metadata[N_METADATA_TYPES];

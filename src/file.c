@@ -17,16 +17,6 @@ const char *metadata_type_string_map[] =
     "artist"
 };
 
-char *metadata_type_subst_map[] = 
-{
-    "Unknown Title",
-    "0",
-    "0",
-    "Unknown Album",
-    "Unknown Artist",
-    "Unknown Artist",
-};
-
 metadata_t char_to_metadata_t(char in)
 {
     return strchr(metadata_type_char_map, in) - metadata_type_char_map;
@@ -55,6 +45,7 @@ bool has_all_metadata(const file_t *f, const char *needed_metadata)
         if (f->entries[needed] == NULL) {
             return false;
         }
+        needed_metadata++;
     }
     return true;
 }

@@ -10,6 +10,8 @@ typedef struct subst {
 
 extern subst_t *subs[N_METADATA_TYPES];
 
+void print_all_subs(const metadata_t type);
+
 void register_subst(const metadata_t type, const char *sub);
 
 char *get_sub(const metadata_t type, const file_t *f);

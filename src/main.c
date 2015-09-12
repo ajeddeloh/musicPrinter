@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
+#include <getopt.h>
+#include <string.h>
 
 #include "file.h"
 #include "extract.h"
@@ -9,13 +12,34 @@
 
 int main(int argc, char *argv[]) 
 {
+    register_subst(TITLE, "Unknown Title");
+    register_subst(TRACK_NO, "00");
+    register_subst(DISC_NO, "00");
+    register_subst(ALBUM, "Unknown Album");
+    register_subst(ALBUM_ARTIST, "Unknown Artist");
+    register_subst(ARTIST, "Unknown Artist");
+    
+    int opt;
     if (argc < 3) { //TODO: handle options
         printf("Usage: muprint FORMAT_STRING path/to/file\n");
         exit(EXIT_FAILURE);
     }
-    const char *format_string = argv[1];
-    const char *filename = argv[2];
-    
+
+    while ((opt = getopt(argc, argv, "s:")) != -1) {
+        switch(opt) {
+            case 's':
+                if( strchr(metadata_type_char_map, optarg[0]) == NULL) {
+                    fprintf(stderr, "invalid substitution key %c\n", optarg[0]);
+                    exit(EXIT_FAILURE);
+                }
+                register_subst(char_to_metadata_t(optarg[0]), optarg+1);
+                break;
+        }
+    }
+
+    const char *format_string = argv[optind];
+    const char *filename = argv[optind+1];
+
     file_t f;
     char needed_metadata[N_METADATA_TYPES] = {0};
     int err = get_needed_metadata(format_string, needed_metadata);
@@ -30,13 +54,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    register_subst(TITLE, "Unknown Title");
-    register_subst(TRACK_NO, "00");
-    register_subst(DISC_NO, "00");
-    register_subst(ALBUM, "Unknown Album");
-    register_subst(ALBUM_ARTIST, "Unknown Artist");
-    register_subst(ARTIST, "Unknown Artist");
-    
     print_string(format_string, &f);
     putchar('\n');
     file_free(&f);

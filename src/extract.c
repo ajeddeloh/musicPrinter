@@ -19,10 +19,20 @@ int load_file(file_t *f, const char *fname)
     }
 
     AVDictionary *metadata = handle->metadata;
+    if(metadata == NULL) {
+        for (unsigned int i = 0; i < handle->nb_streams; i++) {
+            if(handle->streams[i]->metadata != NULL) {
+                av_dict_copy(&metadata, handle->streams[i]->metadata, 0);
+            }
+        }
+    }
+
+
     if (metadata == NULL) {
         avformat_close_input(&handle);
         return -1;
     }
+
     AVDictionaryEntry *entry = NULL;
     for (size_t i = 0; i < N_METADATA_TYPES; i ++) {
         const char *key = metadata_type_string_map[i];

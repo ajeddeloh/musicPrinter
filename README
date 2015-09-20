@@ -1,5 +1,7 @@
 This is a program to print formatted music metadata. It uses libavformat to
-extract the metadata, and thus will work on a large variety of files. 
+extract the metadata, and thus will work on a large variety of files. It also
+searches the steam metadata as well as the container metadata (as some 
+malformatted music files have their metadata in weird places)
 
 Still in development, some features not implemented yet.
 

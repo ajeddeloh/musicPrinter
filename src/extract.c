@@ -44,13 +44,16 @@ int load_file(file_t *f, const char *fname)
             f->entries[i] = NULL;
         }
     }
-    char *tmp = strdup(fname); //since basename can modify it
-    f->entries[FILENAME] = strdup(basename(tmp));
-    free(tmp);
-    tmp = strrchr(fname, '.');
-    if (tmp != NULL) {
-        f->entries[EXT] = strdup(tmp+1);
+    char *path = strdup(fname); //since basename can modify it
+    char *bname = strdup(basename(path));
+    free(path);//bname might have changed it, no longer a source of truth
+
+    char *period = strrchr(bname, '.');
+    if (period != NULL) {
+        f->entries[EXT] = strdup(period+1);
+        *period = '\0';
     }
+    f->entries[FILENAME] = bname;
 
     avformat_close_input(&handle);
     return 0; //success

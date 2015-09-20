@@ -33,7 +33,7 @@ b - The album
 A - The album artist
 a - The artist
 e - The file's original extension
-f - The original file basename as defined in basename(3) 
+f - The original file basename (not including extension) 
 % - a literal %
 
 examples:

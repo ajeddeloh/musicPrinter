@@ -1,7 +1,7 @@
 This is a program to print formatted music metadata. It uses libavformat to
 extract the metadata, and thus will work on a large variety of files. 
 
-Still in development, most features and flags not implemented yet.
+Still in development, some features not implemented yet.
 
 Usage:
 $ muprint [OPTIONS] format_string filename
@@ -40,13 +40,17 @@ examples:
 with all characters not in the metadata that are not in the posix portable
 filesystem character set to be ignored/replaced
 
-OPTIONS
+OPTIONS:
 -c <characters> specifies what the custom character whitelist should be. Just
     a string of characters e.g. "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 -s <original type><subsitition string> specifies what to replace a metadata
     element with if not found. Defaults to "unknown". Other metadata elements
     are valid. For example, you can replace all album artists with the artist
-    using -s "A%a"
+    using -s "A%a". Multiple substitutions for the same metadata type are
+    allowed and the last one added will take precedence. If the substition
+    string contains metadata types that are unknown it is ignored. This allows
+    chains of subsitions (e.g. replace X with Y if y exists, otherwise replace
+    with Z)
 -r <single char> replace non-whitelisted characters with this one instead of
     deleting them
 

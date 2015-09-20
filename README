@@ -32,9 +32,9 @@ d - The disc number, does not currently support padding
 b - The album
 A - The album artist
 a - The artist
-e - The file's original extension NOT IMPLEMENTED
-f - The original file basename as defined in basename(3) NOT IMPLEMENTED
-% - a literal % NOT IMPLEMENTED
+e - The file's original extension
+f - The original file basename as defined in basename(3) 
+% - a literal %
 
 examples:
 /media/Music/%pA/%pb/%d-%T-%t.%e would be 

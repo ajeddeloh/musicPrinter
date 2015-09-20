@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    while ((opt = getopt(argc, argv, "s:")) != -1) {
+    while ((opt = getopt(argc, argv, "s:c:r:")) != -1) {
         switch(opt) {
             case 's':
                 if( strchr(metadata_type_char_map, optarg[0]) == NULL) {
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     }
 
     print_string(format_string, &f);
-    putchar('\n');
+    subst_free();
     file_free(&f);
     return EXIT_SUCCESS;
 }

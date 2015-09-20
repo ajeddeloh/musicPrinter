@@ -10,6 +10,14 @@
 
 subst_t *subs[N_METADATA_TYPES] = {0};
 
+static void free_chain(subst_t *sub)
+{
+    if (sub == NULL) return;
+    free_chain(sub->next);
+    free(sub->string);
+    free(sub);
+}
+
 //for debug
 void print_all_subs(const metadata_t type)
 {
@@ -31,7 +39,7 @@ void register_subst(const metadata_t type, const char *sub)
 char *get_sub(const metadata_t type, const file_t *f)
 {
     subst_t *current = subs[type];
-    char metadata[N_METADATA_TYPES];
+    char metadata[N_METADATA_TYPES] = {0};
     while (current != NULL) {
         int err = get_needed_metadata(current->string, metadata);
         if (err == INVALID_FORMAT) {
@@ -43,4 +51,11 @@ char *get_sub(const metadata_t type, const file_t *f)
         current = current -> next;
     }
     return NULL;
+}
+
+void subst_free()
+{
+    for (int i = 0; i < N_METADATA_TYPES; i++) {
+        free_chain(subs[i]);
+    }
 }

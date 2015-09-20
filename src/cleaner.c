@@ -19,8 +19,7 @@ static int validate_unix_fs(int c)
 
 static int validate_custom(int c) 
 {
-    (void) c; //TODO write this
-    return 1;
+    return strchr(allowed_chars, c) != NULL;
 }
 
 static int no_validation(int c)

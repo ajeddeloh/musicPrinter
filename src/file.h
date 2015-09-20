@@ -17,6 +17,8 @@ typedef enum {
     ALBUM,
     ALBUM_ARTIST,
     ARTIST,
+    FILENAME,
+    EXT,
     N_METADATA_TYPES
 } metadata_t;
 

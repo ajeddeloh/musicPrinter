@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
     register_subst(ALBUM, "Unknown Album");
     register_subst(ALBUM_ARTIST, "Unknown Artist");
     register_subst(ARTIST, "Unknown Artist");
+    register_subst(FILENAME, "");
+    register_subst(EXT, "");
     
     int opt;
     if (argc < 3) { //TODO: handle options

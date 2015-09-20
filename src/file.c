@@ -6,7 +6,8 @@
 #include "file.h"
 
 //make sure these stay in sync with the enum defined in file.h
-const char metadata_type_char_map[] = "tTdbAa";
+const char metadata_type_char_map[] = "tTdbAafe";
+
 const char *metadata_type_string_map[] = 
 {
     "title",
@@ -14,7 +15,9 @@ const char *metadata_type_string_map[] =
     "disc",
     "album",
     "album_artist",
-    "artist"
+    "artist",
+    "", //empty so av_dict_get doesnt find anything for FILENAME or EXT
+    "",
 };
 
 metadata_t char_to_metadata_t(char in)

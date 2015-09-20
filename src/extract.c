@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <libgen.h>
 
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>
@@ -43,6 +44,14 @@ int load_file(file_t *f, const char *fname)
             f->entries[i] = NULL;
         }
     }
+    char *tmp = strdup(fname); //since basename can modify it
+    f->entries[FILENAME] = strdup(basename(tmp));
+    free(tmp);
+    tmp = strrchr(fname, '.');
+    if (tmp != NULL) {
+        f->entries[EXT] = strdup(tmp+1);
+    }
+
     avformat_close_input(&handle);
     return 0; //success
 }

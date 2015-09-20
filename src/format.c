@@ -63,6 +63,8 @@ int get_needed_metadata(const char *format, char *metadata)
                         metadata_cursor++;
                     }
                     state = STATE_TYPE;
+                } else if (current == '%') {
+                    state = STATE_TEXT; 
                 } else {
                     return INVALID_FORMAT;
                 }
@@ -115,6 +117,9 @@ void print_string(const char *format, const file_t *f) {
                 if (strchr(valid_modifiers, current) != NULL) {
                     active_modifier = current;
                     state = STATE_MODIFIER;
+                } else if (current == '%') {
+                    putchar(current);
+                    state = STATE_TEXT;
                 } else { //is type
                     type = char_to_metadata_t(current);
                     print_type(f, type, &active_modifier);

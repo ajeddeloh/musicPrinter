@@ -8,6 +8,7 @@
 #include "file.h"
 #include "format.h"
 #include "subst.h"
+#include "cleaner.h"
 
 typedef enum {
     STATE_TEXT, //doubles as start state. change this?
@@ -16,14 +17,14 @@ typedef enum {
     STATE_TYPE
 } state_t;
 
-const char valid_modifiers[] = "c"; //for now
+const char valid_modifiers[] = "vcpu"; 
 const char *valid_types = metadata_type_char_map;
 
 //modifier is actaully a true pointer to single char, should be set to \0 afterwards
 static void print_type(const file_t *f, const metadata_t type, char *modifier)
 {
     if (f->entries[type] != NULL) {
-        fputs(f->entries[type], stdout);
+        puts_with_validation(f->entries[type], get_validation_func(*modifier));
         *modifier = '\0';
     } else {
         char *substitution = get_sub(type, f);

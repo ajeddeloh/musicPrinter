@@ -9,6 +9,7 @@
 #include "extract.h"
 #include "format.h"
 #include "subst.h"
+#include "cleaner.h"
 
 int main(int argc, char *argv[]) 
 {
@@ -34,6 +35,13 @@ int main(int argc, char *argv[])
                 }
                 register_subst(char_to_metadata_t(optarg[0]), optarg+1);
                 break;
+            case 'r':
+                set_replace_char(optarg[0]);
+                break;
+            case 'c':
+                set_allowed_chars(optarg);
+                break;
+
         }
     }
 

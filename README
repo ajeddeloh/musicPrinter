@@ -6,12 +6,6 @@ Still in development, most features and flags not implemented yet.
 Usage:
 $ muprint [OPTIONS] format_string filename
 
-format_string accepts the following metadata, support for more is planned. each
-are optionally prefixed with c or p for adding whitelisted characters. If you
-want more fine grained control on character substitution look into tr. c means
-"clean" as whitelists most non control characters, p means "posix" and
-whitelists all characters in the POSIX.1-2008 portable filesystem character set
-
 The format string is similar to printf's format string. It uses % to denote
 metadata chunks from the loaded file. %% is used to denote a literal %. each
 metadata chunk is composed of an optional modifier character followed by a type
@@ -21,11 +15,11 @@ the -r option. If you need more advanced replace options, use another program
 like tr.
 
 MODIFIERS:
-a - allow all printing ascii characters (as defined by isprint(3))
+v - allow all printing (visible) ascii characters (as defined by isprint(3))
 p - allow all characters in the POSIX.1-2008 portable filesystem character set
     (that is: all alphanumeric characters plus period (.), underscore(_) and
     hyphen (-). Does NOT enforce that the first character should not be hyphen
-f - allow all characters that are valid characters in unix filenames (i.e. not
+u - allow all characters that are valid characters in unix filenames (i.e. not
     '\0' and '/')
 c - allows a custom set of characters, specified by the -c flag
 
@@ -36,8 +30,9 @@ d - The disc number, does not currently support padding
 b - The album
 A - The album artist
 a - The artist
-e - The file's original extension
-% - a literal % 
+e - The file's original extension NOT IMPLEMENTED
+f - The original file basename as defined in basename(3) NOT IMPLEMENTED
+% - a literal % NOT IMPLEMENTED
 
 examples:
 /media/Music/%pA/%pb/%d-%T-%t.%e would be 

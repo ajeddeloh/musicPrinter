@@ -3,11 +3,37 @@
 #include <string.h>
 #include <stdbool.h>
 #include <libgen.h>
+#include <stdio.h>
 
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>
 
 #include "extract.h"
+
+//Wrapper that handles any conversion that needs to be done (e.g. converting
+//a track like "03/14" to "03" as well as null dict entries
+static void add_entry(file_t *f, metadata_t type, const AVDictionaryEntry *entry)
+{
+    if (entry == NULL) {
+        f->entries[type] = NULL;
+        return;
+    }
+    const char *toadd = entry->value;
+    size_t len = 0;
+
+    switch (type) {
+        case TRACK_NO: //handle cases of '04/12' and convert to '04'
+        case DISC_NO:
+            len = strspn(toadd, "0123456789");
+            f->entries[type] = malloc(strlen(toadd)+1); //wont be any bigger
+            strncpy(f->entries[type], toadd, len);
+            f->entries[type][len] = '\0'; //because linux doesnt have strlcpy
+            break;
+        default:
+            f->entries[type] = strdup(toadd);
+            break;
+    }
+}
 
 int load_file(file_t *f, const char *fname)
 {
@@ -38,11 +64,7 @@ int load_file(file_t *f, const char *fname)
     for (size_t i = 0; i < N_METADATA_TYPES; i ++) {
         const char *key = metadata_type_string_map[i];
         entry = av_dict_get(metadata, key, NULL, 0);
-        if (entry != NULL) {
-            f->entries[i] = strdup(entry->value);
-        } else {
-            f->entries[i] = NULL;
-        }
+        add_entry(f, i, entry);
     }
     char *path = strdup(fname); //since basename can modify it
     char *bname = strdup(basename(path));

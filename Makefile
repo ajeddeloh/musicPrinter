@@ -5,7 +5,7 @@ HEADERS=$(wildcard src/*.h)
 OBJECTS=$(patsubst src/%, build/%, $(SOURCES:.c=.o))
 EXECUTABLE=muprint
 CFLAGS= -std=c11 -Wall -Wextra -Werror
-LDFLAGS=-lavformat -lavutil
+LDFLAGS=`pkg-config --libs libavformat libavutil`
 
 build/%.o:src/%.c $(HEADERS)
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -23,6 +23,7 @@ release: $(EXECUTABLE)
 
 .PHONY: all
 all: $(EXECUTABLE)
+	echo $(LDFLAGS)
 
 .PHONY: clean
 clean: 

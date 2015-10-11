@@ -10,6 +10,7 @@
 #include "format.h"
 #include "subst.h"
 #include "cleaner.h"
+#include "help.h"
 
 int main(int argc, char *argv[]) 
 {
@@ -23,12 +24,7 @@ int main(int argc, char *argv[])
     register_subst(EXT, "");
     
     int opt;
-    if (argc < 3) { //TODO: handle options
-        printf("Usage: muprint FORMAT_STRING path/to/file\n");
-        exit(EXIT_FAILURE);
-    }
-
-    while ((opt = getopt(argc, argv, "s:c:r:")) != -1) {
+    while ((opt = getopt(argc, argv, "s:c:r:h")) != -1) {
         switch(opt) {
             case 's':
                 if( strchr(metadata_type_char_map, optarg[0]) == NULL) {
@@ -43,8 +39,15 @@ int main(int argc, char *argv[])
             case 'c':
                 set_allowed_chars(optarg);
                 break;
+            case 'h':
+                print_help();
+                break;
 
         }
+    }
+    if (argc < 3) { //TODO: handle options
+        printf("Usage: muprint FORMAT_STRING path/to/file\n");
+        exit(EXIT_FAILURE);
     }
 
     const char *format_string = argv[optind];
